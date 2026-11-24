@@ -1,0 +1,219 @@
+/* ==========================================================================
+   ANIMATIONS
+   Timeline (matches the 3000ms timer in IntroAnimation.jsx):
+   0.05s line draws -> 0.35s PO -> 0.85s name -> 1.15s tagline
+   2.20s overlay wipes up, done at 3.00s
+   ========================================================================== */
+
+/* --- OPENING INTRO SEQUENCE --- */
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  background:
+    radial-gradient(
+      ellipse at 50% 120%,
+      rgb(var(--rose-rgb) / 0.25),
+      transparent 60%
+    ),
+    var(--color-burgundy);
+  color: var(--color-ivory);
+  animation: introExit 0.8s var(--ease-out) 2.2s forwards;
+}
+
+/* Hairline progress along the bottom edge shows how long the intro lasts */
+.intro-overlay::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-rose);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: introProgress 2.2s linear forwards;
+}
+
+.intro-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+}
+
+/* Stage 2: initials */
+.intro-initials {
+  font-family: var(--font-serif);
+  font-size: clamp(3.5rem, 8vw, 5.5rem);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  color: var(--color-rose);
+  text-shadow: 0 0 48px rgb(var(--rose-rgb) / 0.45);
+  opacity: 0;
+  transform: scale(0.94);
+  animation: introRevealUp 0.7s var(--ease-out) 0.35s forwards;
+}
+
+/* Stage 1: fine rose line */
+.intro-line {
+  width: min(220px, 60vw);
+  height: 1.5px;
+  margin: 1.15rem 0 1.35rem;
+  background-color: var(--color-rose);
+  transform: scaleX(0);
+  transform-origin: center;
+  animation: introDrawLine 0.75s var(--ease-out) 0.05s forwards;
+}
+
+/* Stage 3: name settles into its final letter-spacing */
+.intro-name {
+  margin-bottom: 0.55rem;
+  font-family: var(--font-serif);
+  font-size: clamp(1.35rem, 3vw, 1.85rem);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--color-ivory);
+  opacity: 0;
+  animation: introTrack 0.9s var(--ease-out) 0.85s forwards;
+}
+
+.intro-philosophy {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1rem, 2.2vw, 1.25rem);
+  letter-spacing: 0.02em;
+  color: var(--color-rose-soft);
+  opacity: 0;
+  transform: translateY(8px);
+  animation: introRevealUp 0.65s var(--ease-out) 1.15s forwards;
+}
+
+.intro-skip {
+  position: absolute;
+  right: 2rem;
+  bottom: 2rem;
+  padding: 0.4rem 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--color-rose-soft);
+  background: none;
+  border: 1px solid rgb(var(--rose-rgb) / 0.35);
+  border-radius: var(--btn-radius);
+  opacity: 0.75;
+  cursor: pointer;
+  transition:
+    opacity var(--transition),
+    background-color var(--transition),
+    color var(--transition);
+}
+
+.intro-skip:hover {
+  opacity: 1;
+  background-color: var(--color-rose);
+  color: var(--color-plum);
+}
+
+/* --- HERO MOTION --- */
+@keyframes drift {
+  to {
+    translate: -6% 8%;
+    scale: 1.15;
+  }
+}
+
+@keyframes frameSpin {
+  to {
+    --angle: 360deg;
+  }
+}
+
+@keyframes float {
+  50% {
+    translate: 0 -10px;
+  }
+}
+
+/* --- INTRO KEYFRAMES --- */
+@keyframes introDrawLine {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes introRevealUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes introTrack {
+  from {
+    opacity: 0;
+    letter-spacing: 0.45em;
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 0.22em;
+  }
+}
+
+@keyframes introProgress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Wipes upward to reveal the homepage */
+@keyframes introExit {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+@keyframes introFadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+/* --- REDUCED MOTION --- */
+@media (prefers-reduced-motion: reduce) {
+  .intro-overlay {
+    animation: introFadeOut 0.4s ease 0.8s forwards;
+  }
+
+  .intro-overlay::after {
+    display: none;
+  }
+
+  .intro-initials,
+  .intro-line,
+  .intro-name,
+  .intro-philosophy {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .editorial-frame,
+  .hero-section::before {
+    animation: none;
+  }
+}

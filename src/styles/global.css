@@ -1,0 +1,237 @@
+/* ==========================================================================
+   GLOBAL: tokens, reset, typography, layout
+   ========================================================================== */
+
+/* Lets the hero frame's gradient border rotate smoothly (see animations.css) */
+@property --angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+:root {
+  color-scheme: light;
+
+  /* Brand palette (unchanged) */
+  --color-burgundy: #6b1839;
+  --color-burgundy-dark: #4f1029;
+  --color-rose: #e9a0b5;
+  --color-rose-soft: #f7dce4;
+  --color-ivory: #fff8f6;
+  --color-plum: #30232b;
+  --color-plum-muted: #5c4954;
+  --color-border: rgba(107, 24, 57, 0.14);
+
+  /* Derived tones (new). Same hues, just usable in more places */
+  --color-rose-deep: #b4456f; /* rose that passes AA contrast on ivory */
+  --color-surface: #ffffff;
+  --color-error: #b4233c;
+  --color-border-rose: rgb(233 160 181 / 0.22);
+  --burgundy-rgb: 107 24 57;
+  --rose-rgb: 233 160 181;
+  --plum-rgb: 48 35 43;
+
+  /* Typography */
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans:
+    "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+
+  /* Layout */
+  --max-width: 1120px;
+  --nav-height: 76px;
+  --section-padding: clamp(4rem, 8vw, 7rem);
+
+  /* Shape */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --btn-radius: 999px; /* set to var(--radius-sm) for squarer buttons */
+
+  /* Depth */
+  --shadow-md: 0 12px 32px -14px rgb(var(--plum-rgb) / 0.22);
+  --shadow-lg: 0 28px 60px -24px rgb(var(--burgundy-rgb) / 0.45);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --transition: 0.3s var(--ease-out);
+}
+
+/* ---------- Reset ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-height) + 1rem);
+  scrollbar-gutter: stable;
+  scrollbar-color: var(--color-rose) var(--color-ivory);
+  -webkit-text-size-adjust: 100%;
+  background-color: var(--color-ivory);
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-x: clip; /* unlike hidden, clip doesn't break position: sticky */
+  background-color: var(--color-ivory);
+  color: var(--color-plum);
+  font-family: var(--font-sans);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Keeps the footer pinned to the bottom on short pages */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Freeze the page behind the mobile menu and the intro overlay */
+body:has(.nav-open),
+body:has(.intro-overlay) {
+  overflow: hidden;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background-color: var(--color-rose);
+  color: var(--color-plum);
+}
+
+/* ---------- Editorial typography ---------- */
+h1,
+h2,
+h3,
+.serif {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-optical-sizing: auto;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  color: var(--color-burgundy);
+  text-wrap: balance;
+}
+
+/* Cormorant has a small x-height, so display sizes run a little larger */
+h1 {
+  font-size: clamp(2.75rem, 7vw, 5.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+}
+
+h2 {
+  font-size: clamp(2rem, 4.2vw, 3.25rem);
+}
+
+h3 {
+  font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+}
+
+p {
+  max-width: 65ch;
+  text-wrap: pretty;
+}
+
+/* ---------- Accessibility ---------- */
+:focus-visible {
+  outline: 2px solid var(--color-burgundy);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Add <a className="skip-link" href="#main">Skip to content</a> as the first
+   element in App.jsx, and id="main" on your <main> */
+.skip-link {
+  position: absolute;
+  top: -4rem;
+  left: 1rem;
+  z-index: 200;
+  padding: 0.7rem 1.1rem;
+  background-color: var(--color-burgundy);
+  color: var(--color-ivory);
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  transition: top var(--transition);
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* ---------- Layout ---------- */
+.container {
+  width: min(90%, var(--max-width));
+  margin-inline: auto;
+}
+
+.section {
+  padding: var(--section-padding) 0;
+}
+
+/* ---------- Inverted editorial theme (About page) ---------- */
+.about-theme {
+  background-color: var(--color-burgundy);
+  color: var(--color-ivory);
+  min-height: 100%;
+}
+
+.about-theme h1,
+.about-theme h2,
+.about-theme h3,
+.about-theme .serif {
+  color: var(--color-rose);
+}
+
+.about-theme p,
+.about-theme li {
+  color: rgb(255 248 246 / 0.9);
+}
+
+.about-theme :focus-visible {
+  outline-color: var(--color-rose);
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

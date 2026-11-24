@@ -1,0 +1,107 @@
+/* ==========================================================================
+   GLASS: frosted panels, used only where there is colour behind them to blur.
+   Import AFTER components.css:  import './styles/glass.css'
+   ========================================================================== */
+
+/* Glass needs something to refract, so these sections get soft glows behind them */
+.about-focus,
+.about-credentials,
+.contact-grid {
+  position: relative;
+  isolation: isolate;
+}
+
+.about-focus,
+.about-credentials {
+  overflow: clip;
+}
+
+.about-focus::before,
+.about-credentials::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: min(520px, 80vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(var(--rose-rgb) / 0.3), transparent 65%);
+  filter: blur(24px);
+}
+
+.about-focus::before {
+  top: -10%;
+  left: -8%;
+}
+
+.about-credentials::before {
+  right: -10%;
+  bottom: -15%;
+}
+
+.contact-grid::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 5%;
+  right: -8%;
+  width: min(480px, 70vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(var(--rose-rgb) / 0.55), transparent 65%);
+  filter: blur(30px);
+}
+
+/* Dark glass: About page cards over burgundy */
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .focus-card,
+  .credential-item {
+    background-color: rgb(255 248 246 / 0.06);
+    border-color: rgb(var(--rose-rgb) / 0.28);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.12),
+      0 18px 40px -24px rgb(0 0 0 / 0.45);
+    -webkit-backdrop-filter: blur(14px) saturate(1.3);
+    backdrop-filter: blur(14px) saturate(1.3);
+  }
+
+  .focus-card:hover,
+  .credential-item:hover {
+    background-color: rgb(255 248 246 / 0.1);
+  }
+
+  /* Light glass: contact form over the rose glow */
+  .contact-form-wrapper {
+    background-color: rgb(255 255 255 / 0.62);
+    border-color: rgb(255 255 255 / 0.8);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.9),
+      var(--shadow-md);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    backdrop-filter: blur(18px) saturate(1.4);
+  }
+}
+
+/* Lighter blur on phones to keep scrolling smooth */
+@media (max-width: 768px) {
+  .focus-card,
+  .credential-item {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+}
+
+/* Respect the OS "reduce transparency" setting with solid panels */
+@media (prefers-reduced-transparency: reduce) {
+  .focus-card,
+  .credential-item {
+    background-color: var(--color-burgundy-dark);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .contact-form-wrapper {
+    background-color: var(--color-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
